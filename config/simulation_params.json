@@ -1,0 +1,35 @@
+{
+  "environment": {
+    "size": [150, 150],
+    "num_obstacles": 70,
+    "targets_list": [
+      [130, 40],
+      [80, 130],
+      [20, 70]
+    ],
+    "home_pos": [10, 10]
+  },
+  "simulation": {
+    "max_steps": 3000,
+    "num_swarm_agents": 25
+  },
+  "algorithms": {
+    "ant_path_integration": {
+      "drift_scale": 0.025,
+      "speed": 1.0,
+      "search_spiral_rate": 0.1
+    },
+    "bee_swarm": {
+      "speed": 1.0,
+      "pheromone_deposit_rate": 50.0,
+      "pheromone_decay_rate": 0.985,
+      "num_scouts_ratio": 0.2
+    },
+    "rodent_cognitive_map": {
+      "speed": 1.0,
+      "grid_cell_drift": 0.02,
+      "place_cell_radius": 6,
+      "head_direction_drift": 0.02
+    }
+  }
+}
