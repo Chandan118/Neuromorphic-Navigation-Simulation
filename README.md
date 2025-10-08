@@ -6,6 +6,8 @@ This project is a Python-based simulation environment for testing and comparing 
 
 The project has been enhanced to include complex, continuous foraging tasks to test the long-term stability and efficiency of the advanced models. The primary goal is to generate detailed performance data (in CSV format) to analyze the efficiency, accuracy, and robustness of these neuromorphic strategies.
 
+![Sample Trajectories](docs/assets/trajectories.png)
+
 ## Author
 
 * **Chandan Sheikder**
