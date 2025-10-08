@@ -14,6 +14,24 @@
     "num_swarm_agents": 25
   },
   "algorithms": {
+    "potential_field": {
+      "speed": 1.0,
+      "attractive_gain": 1.2,
+      "repulsive_gain": 35.0,
+      "obstacle_influence_radius": 12.0,
+      "damping": 0.15,
+      "noise_scale": 0.04
+    },
+    "soft_body_haptic": {
+      "speed": 0.9,
+      "sensing_arc": 3.1416,
+      "num_sensors": 7,
+      "sensor_range": 8.0,
+      "compliance": 0.65,
+      "orientation_damping": 0.4,
+      "contact_bias": 0.5,
+      "exploration_noise": 0.05
+    },
     "ant_path_integration": {
       "drift_scale": 0.025,
       "speed": 1.0,

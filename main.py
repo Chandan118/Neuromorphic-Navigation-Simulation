@@ -18,6 +18,8 @@ def main():
     # List of algorithms to simulate
     algorithms_to_run = [
         "Baseline",
+        "PotentialField",
+        "SoftBodyHaptic",
         "AntPathIntegration",
         "RodentCognitiveMap",
         "BeeSwarmPheromones"

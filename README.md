@@ -17,6 +17,8 @@ The project has been enhanced to include complex, continuous foraging tasks to t
 - **Detailed Data Logging**: Outputs detailed CSV logs with per-step data on position, status, state, energy use, and cumulative drift.
 - **Advanced Implemented Algorithms**:
     - **Baseline Search**: A simple random-walk algorithm for performance comparison.
+    - **Potential Field Navigator**: Deterministic gradient-based navigation that blends attractive target forces with obstacle repulsion, ideal for ROS2 streaming.
+    - **Soft-Body Haptic Glide**: Soft-robot inspired navigator that hugs obstacles via tactile sensing and compliant heading adjustments.
     - **Ant Path Integration**: Navigates a multi-target tour and includes a systematic "lost" search behavior to handle accumulated drift.
     - **Bee Swarm Pheromones**: Features a complex multi-agent system with 'Scout' and 'Forager' roles and a recruitment model.
     - **Rodent Cognitive Map**: A sophisticated model with Grid Cells, Place Cells, and Head-Direction Cells, capable of continuous, looped foraging to test long-term navigation.
@@ -40,6 +42,8 @@ neuromorphic_navigation_project/
 |
 ├── algorithms/             # Navigation algorithm implementations
 │   ├── baseline_nav.py
+│   ├── potential_field_nav.py
+│   ├── soft_body_haptic_nav.py
 │   ├── ant_path_integration.py
 │   ├── bee_swarm_pheromones.py
 │   └── rodent_cognitive_map.py
@@ -75,6 +79,66 @@ python3 main.py
 ```
 
 The script will run all simulations sequentially, save the `.csv` log files into the `results/` directory, and generate all comparison plots in the `results/plots/` subdirectory.
+
+To focus on a single algorithm, edit `main.py` and adjust the `algorithms_to_run` list. The soft-body haptic option is exposed under the name `SoftBodyHaptic`; tune its compliance and tactile sensor parameters in `config/simulation_params.json`.
+
+## Soft-Body Haptic Navigation
+
+The soft-robot inspired controller models a compliant body with distributed tactile probes. Each step it:
+
+- casts a fan of short-range rays to estimate virtual contact forces around the hull;
+- blends target-directed motion with wall-following behaviours when contact is detected;
+- injects small exploratory noise to escape local minima, mimicking shape reconfiguration.
+
+Configuration keys:
+
+- `sensing_arc` / `num_sensors` – field of view and probe count for tactile rays.
+- `sensor_range` – maximum distance for detecting obstacles before contact is assumed.
+- `compliance` – how strongly the agent follows surface cues vs. goal direction.
+- `orientation_damping` – rate of heading adaptation towards the blended target.
+- `contact_bias` – trade-off between pushing away from obstacles and sliding along them.
+
+## ROS 2 Bridge
+
+A ROS&nbsp;2 package lives under `ros2_ws/src/neuromorphic_navigation_ros`. It exposes the simulation over ROS topics so you can visualise the runs in RViz or integrate with other robotic stacks.
+
+```bash
+cd ros2_ws
+source /opt/ros/humble/setup.bash         # or your ROS 2 distribution
+colcon build --packages-select neuromorphic_navigation_ros
+source install/setup.bash
+export NEUROMORPHIC_SIM_ROOT=$(pwd)/..    # point to the Python simulation root
+ros2 launch neuromorphic_navigation_ros simulation_bridge.launch.py
+```
+
+Published topics:
+
+- `pose` (`geometry_msgs/PoseStamped`) – the latest agent pose.
+- `path` (`nav_msgs/Path`) – trajectory accumulated during the run.
+- `status` (`std_msgs/String`) – textual summary of algorithm state and energy usage.
+
+Launch parameters:
+
+- `algorithm` – defaults to `PotentialField`, switch to any other algorithm string from `main.py`.
+- `config_path` – relative path to the JSON config (defaults to `config/simulation_params.json`).
+- `frame_id` – frame used when publishing poses (defaults to `map`).
+
+## Docker Support
+
+Two Dockerfiles are provided under `docker/`:
+
+- `Dockerfile` – lightweight Python image to run the simulations headlessly (`docker build -f docker/Dockerfile -t neuromorphic-sim .`).
+- `ros2.Dockerfile` – ROS&nbsp;2 Humble base image that builds the ROS package and launches the bridge (`docker build -f docker/ros2.Dockerfile -t neuromorphic-sim-ros .`).
+
+A helper `docker/docker-compose.yml` exposes two services:
+
+```bash
+cd docker
+docker compose up simulation          # run the Python-only batch simulations
+docker compose up ros2_bridge         # launch ROS 2 bridge (requires host support for GUI tools)
+```
+
+When using the ROS container, results are written inside the container at `/workspace/project/results`. Mount volumes as required to access them on the host.
 
 ## Understanding the Output
 
