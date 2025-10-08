@@ -20,6 +20,11 @@ def main():
         "Baseline",
         "PotentialField",
         "SoftBodyHaptic",
+        "ArtificialChemotaxis",
+        "NeuromorphicSpiking",
+        "CPGNavigator",
+        "SwarmConsensus",
+        "DeepRL",
         "AntPathIntegration",
         "RodentCognitiveMap",
         "BeeSwarmPheromones"
@@ -35,7 +40,9 @@ def main():
             num_obstacles=env_params['num_obstacles'],
             targets_list=env_params['targets_list'],
             home_pos=tuple(env_params['home_pos']),
-            pheromone_decay_rate=algo_params['bee_swarm']['pheromone_decay_rate']
+            pheromone_decay_rate=env_params['pheromone_decay_rate'],
+            chemical_diffusion_rate=env_params['chemical_diffusion_rate'],
+            chemical_decay_rate=env_params['chemical_decay_rate']
         )
         # --- END OF CORRECTION ---
         

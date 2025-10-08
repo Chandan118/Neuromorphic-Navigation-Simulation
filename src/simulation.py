@@ -9,6 +9,11 @@ from algorithms.bee_swarm_pheromones import BeeSwarmAgent
 from algorithms.rodent_cognitive_map import RodentCognitiveMapper
 from algorithms.potential_field_nav import PotentialFieldNavigator
 from algorithms.soft_body_haptic_nav import SoftBodyHapticNavigator
+from algorithms.neuromorphic_spiking import NeuromorphicSpikingNavigator
+from algorithms.swarm_consensus import SwarmConsensusAgent
+from algorithms.deep_rl_nav import DeepRLNavigator
+from algorithms.chemotaxis_nav import ArtificialChemotaxisNavigator
+from algorithms.cpg_locomotion import CPGNavigator
 
 class Simulation:
     def __init__(self, env, algorithm_type, params, show_progress=True):
@@ -77,6 +82,84 @@ class Simulation:
                     exploration_noise=params['exploration_noise'],
                 )
             )
+        elif self.algorithm_type == "ArtificialChemotaxis":
+            params = algo_params['artificial_chemotaxis']
+            agents.append(
+                ArtificialChemotaxisNavigator(
+                    0,
+                    start_pos,
+                    speed=params['speed'],
+                    gradient_gain=params['gradient_gain'],
+                    trail_deposit=params['trail_deposit'],
+                    noise_scale=params['noise_scale'],
+                    desensitisation=params['desensitisation'],
+                    gradient_radius=params['gradient_radius'],
+                    avoidance_gain=params['avoidance_gain'],
+                )
+            )
+        elif self.algorithm_type == "NeuromorphicSpiking":
+            params = algo_params['neuromorphic_spiking']
+            agents.append(
+                NeuromorphicSpikingNavigator(
+                    0,
+                    start_pos,
+                    speed=params['speed'],
+                    num_neurons=params['num_neurons'],
+                    membrane_decay=params['membrane_decay'],
+                    sensory_weight=params['sensory_weight'],
+                    boundary_weight=params['boundary_weight'],
+                    inhibition_strength=params['inhibition_strength'],
+                    refractory_period=params['refractory_period'],
+                    noise_scale=params['noise_scale'],
+                )
+            )
+        elif self.algorithm_type == "CPGNavigator":
+            params = algo_params['cpg_navigator']
+            agents.append(
+                CPGNavigator(
+                    0,
+                    start_pos,
+                    speed=params['speed'],
+                    base_frequency=params['base_frequency'],
+                    coupling_strength=params['coupling_strength'],
+                    sensory_gain=params['sensory_gain'],
+                    damping=params['damping'],
+                    stride_gain=params['stride_gain'],
+                    obstacle_frequency_boost=params['obstacle_frequency_boost'],
+                )
+            )
+        elif self.algorithm_type == "SwarmConsensus":
+            params = algo_params['swarm_consensus']
+            num_agents = params['num_agents']
+            for i in range(num_agents):
+                agents.append(
+                    SwarmConsensusAgent(
+                        i,
+                        start_pos,
+                        speed=params['speed'],
+                        neighborhood_radius=params['neighborhood_radius'],
+                        cohesion_gain=params['cohesion_gain'],
+                        alignment_gain=params['alignment_gain'],
+                        separation_gain=params['separation_gain'],
+                        target_gain=params['target_gain'],
+                        noise_scale=params['noise_scale'],
+                        velocity_damping=params['velocity_damping'],
+                    )
+                )
+        elif self.algorithm_type == "DeepRL":
+            params = algo_params['deep_rl']
+            agents.append(
+                DeepRLNavigator(
+                    0,
+                    start_pos,
+                    speed=params['speed'],
+                    hidden_size=params['hidden_size'],
+                    learning_rate=params['learning_rate'],
+                    gamma=params['gamma'],
+                    epsilon=params['epsilon'],
+                    epsilon_decay=params['epsilon_decay'],
+                )
+            )
         return agents
 
 
@@ -91,7 +174,20 @@ class Simulation:
             # --- UPDATED COMPLETION LOGIC ---
             tasks_complete = 0
             for agent in self.agents:
-                agent.step(self.env)
+                swarm_info = None
+                if self.algorithm_type in ("BeeSwarmPheromones", "SwarmConsensus"):
+                    swarm_info = {
+                        "agents": [
+                            {
+                                "id": other.agent_id,
+                                "pos": other.pos.copy(),
+                                "velocity": getattr(other, "velocity", np.zeros(2)),
+                            }
+                            for other in self.agents
+                            if other.agent_id != agent.agent_id
+                        ]
+                    }
+                agent.step(self.env, swarm_info)
                 self._log_step(step, agent)
                 if self.step_callback:
                     self.step_callback(step, agent, self.env)

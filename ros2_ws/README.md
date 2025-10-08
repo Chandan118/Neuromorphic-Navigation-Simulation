@@ -49,4 +49,6 @@ The node publishes:
 - `path` (`nav_msgs/Path`) – full trajectory of the current run.
 - `status` (`std_msgs/String`) – textual updates about progress and energy usage.
 
+Set the launch parameter `algorithm` to any option in `main.py` (e.g. `NeuromorphicSpiking`, `ArtificialChemotaxis`, `CPGNavigator`, `SwarmConsensus`, or `DeepRL`) to stream a different controller.
+
 See the top-level README for more details on how to integrate this bridge via Docker.

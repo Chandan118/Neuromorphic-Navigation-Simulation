@@ -4,12 +4,14 @@ class Environment:
     """
     Manages the 2D simulation world, including obstacles, multiple targets, and pheromones.
     """
-    def __init__(self, size, num_obstacles, targets_list, home_pos, pheromone_decay_rate):
+    def __init__(self, size, num_obstacles, targets_list, home_pos, pheromone_decay_rate, chemical_diffusion_rate=0.1, chemical_decay_rate=0.98):
         self.size = size
         self.grid = np.zeros(size)
         self.targets_list = [np.array(t) for t in targets_list]
         self.home_pos = np.array(home_pos)
         self.pheromone_decay_rate = pheromone_decay_rate
+        self.chemical_diffusion_rate = chemical_diffusion_rate
+        self.chemical_decay_rate = chemical_decay_rate
 
         # The primary target for swarm/baseline is the first in the list
         self.target_pos = self.targets_list[0] if self.targets_list else None
@@ -25,6 +27,10 @@ class Environment:
                 self.obstacles.append(pos)
         
         self.pheromone_grid = np.zeros(size)
+        self.chemical_grid = np.zeros(size)
+
+        for target in self.targets_list:
+            self.deposit_chemical(target, amount=50.0)
 
     def is_valid_position(self, pos):
         """Check if a position is within bounds and not an obstacle."""
@@ -46,7 +52,30 @@ class Environment:
         y_min, y_max = max(0, y - radius), min(self.size[1], y + radius + 1)
         return self.pheromone_grid[x_min:x_max, y_min:y_max]
 
+    def deposit_chemical(self, pos, amount):
+        """Deposit chemical concentration at a given position."""
+        x, y = int(pos[0]), int(pos[1])
+        if 0 <= x < self.size[0] and 0 <= y < self.size[1]:
+            self.chemical_grid[x, y] += amount
+
+    def sense_chemical(self, pos, radius=3):
+        """Sense chemical concentrations around a position."""
+        x, y = int(pos[0]), int(pos[1])
+        x_min, x_max = max(0, x - radius), min(self.size[0], x + radius + 1)
+        y_min, y_max = max(0, y - radius), min(self.size[1], y + radius + 1)
+        return self.chemical_grid[x_min:x_max, y_min:y_max]
+
     def update(self):
         """Update the environment state, e.g., pheromone evaporation."""
         self.pheromone_grid *= self.pheromone_decay_rate
         self.pheromone_grid[self.pheromone_grid < 0.1] = 0
+        if self.chemical_diffusion_rate > 0:
+            diffused = (
+                np.roll(self.chemical_grid, 1, axis=0)
+                + np.roll(self.chemical_grid, -1, axis=0)
+                + np.roll(self.chemical_grid, 1, axis=1)
+                + np.roll(self.chemical_grid, -1, axis=1)
+            ) / 4.0
+            self.chemical_grid = (1 - self.chemical_diffusion_rate) * self.chemical_grid + self.chemical_diffusion_rate * diffused
+        self.chemical_grid *= self.chemical_decay_rate
+        self.chemical_grid[self.chemical_grid < 0.05] = 0
