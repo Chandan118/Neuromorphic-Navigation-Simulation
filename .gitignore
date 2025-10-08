@@ -1,0 +1,39 @@
+# Python virtual environment
+# Never commit your virtual environment folder
+venv/
+/venv/
+
+# Python bytecode and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# OS-generated files
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+
+# IDE and editor configuration files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Simulation output files
+# Ignore all generated CSV logs and plots inside the results folder.
+# This keeps your repository focused on source code, not output data.
+results/*
+
+# The following line is optional but good practice.
+# It ensures that if you add an empty file named .gitkeep to the results
+# folder, the empty folder itself will be tracked by Git.
+!results/.gitkeep
+
+# ROS 2 workspace artifacts
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/

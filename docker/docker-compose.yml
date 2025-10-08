@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  simulation:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ..:/workspace
+    working_dir: /workspace
+    command: ["python", "main.py"]
+
+  ros2_bridge:
+    build:
+      context: ..
+      dockerfile: docker/ros2.Dockerfile
+    environment:
+      - NEUROMORPHIC_SIM_ROOT=/workspace/project
+    command:
+      [
+        "bash",
+        "-lc",
+        "source /opt/ros/humble/setup.bash && source /workspace/project/ros2_ws/install/setup.bash && ros2 launch neuromorphic_navigation_ros simulation_bridge.launch.py",
+      ]

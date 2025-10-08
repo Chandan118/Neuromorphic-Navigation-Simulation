@@ -1,0 +1,103 @@
+{
+  "environment": {
+    "size": [150, 150],
+    "num_obstacles": 70,
+    "targets_list": [
+      [130, 40],
+      [80, 130],
+      [20, 70]
+    ],
+    "home_pos": [10, 10],
+    "pheromone_decay_rate": 0.985,
+    "chemical_diffusion_rate": 0.18,
+    "chemical_decay_rate": 0.97
+  },
+  "simulation": {
+    "max_steps": 3000,
+    "num_swarm_agents": 25
+  },
+  "algorithms": {
+    "artificial_chemotaxis": {
+      "speed": 0.95,
+      "gradient_gain": 1.2,
+      "trail_deposit": 5.0,
+      "noise_scale": 0.08,
+      "desensitisation": 0.9,
+      "gradient_radius": 3,
+      "avoidance_gain": 0.7
+    },
+    "potential_field": {
+      "speed": 1.0,
+      "attractive_gain": 1.2,
+      "repulsive_gain": 35.0,
+      "obstacle_influence_radius": 12.0,
+      "damping": 0.15,
+      "noise_scale": 0.04
+    },
+    "cpg_navigator": {
+      "speed": 1.0,
+      "base_frequency": 0.35,
+      "coupling_strength": 0.22,
+      "sensory_gain": 0.6,
+      "damping": 0.06,
+      "stride_gain": 1.1,
+      "obstacle_frequency_boost": 0.25
+    },
+    "neuromorphic_spiking": {
+      "speed": 1.0,
+      "num_neurons": 24,
+      "membrane_decay": 0.85,
+      "sensory_weight": 1.4,
+      "boundary_weight": 0.9,
+      "inhibition_strength": 0.6,
+      "refractory_period": 6,
+      "noise_scale": 0.03
+    },
+    "soft_body_haptic": {
+      "speed": 0.9,
+      "sensing_arc": 3.1416,
+      "num_sensors": 7,
+      "sensor_range": 8.0,
+      "compliance": 0.65,
+      "orientation_damping": 0.4,
+      "contact_bias": 0.5,
+      "exploration_noise": 0.05
+    },
+    "swarm_consensus": {
+      "speed": 0.95,
+      "num_agents": 18,
+      "neighborhood_radius": 25.0,
+      "cohesion_gain": 0.05,
+      "alignment_gain": 0.08,
+      "separation_gain": 0.25,
+      "target_gain": 0.9,
+      "noise_scale": 0.06,
+      "velocity_damping": 0.55
+    },
+    "deep_rl": {
+      "speed": 1.0,
+      "hidden_size": 32,
+      "learning_rate": 0.005,
+      "gamma": 0.92,
+      "epsilon": 0.15,
+      "epsilon_decay": 0.999
+    },
+    "ant_path_integration": {
+      "drift_scale": 0.025,
+      "speed": 1.0,
+      "search_spiral_rate": 0.1
+    },
+    "bee_swarm": {
+      "speed": 1.0,
+      "pheromone_deposit_rate": 50.0,
+      "pheromone_decay_rate": 0.985,
+      "num_scouts_ratio": 0.2
+    },
+    "rodent_cognitive_map": {
+      "speed": 1.0,
+      "grid_cell_drift": 0.02,
+      "place_cell_radius": 6,
+      "head_direction_drift": 0.02
+    }
+  }
+}
