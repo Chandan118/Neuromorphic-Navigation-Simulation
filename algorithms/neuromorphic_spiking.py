@@ -1,3 +1,16 @@
+"""
+neuromorphic_spiking.py
+
+Author      : Chandan Sheikder
+Email       : chandan@bit.edu.cn
+Phone       : +8618222390506
+Affiliation : Beijing Institute of Technology (BIT)
+Date        : 2026-03-23
+
+Description:
+    Module for Neuromorphic Spiking
+"""
+
 import numpy as np
 from src.robot import Robot
 
