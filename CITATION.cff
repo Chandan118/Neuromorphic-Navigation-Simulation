@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+type: software
+title: "Neuromorphic Navigation Simulation"
+version: "1.0.0"
+date-released: "2025-03-23"
+doi: "10.5281/zenodo.18512745"
+abstract: >-
+  A comprehensive simulation framework implementing and comparing 11 bio-inspired navigation algorithms including CPG locomotion, pheromone trails, neuromorphic spiking, and deep RL.
+license: MIT
+authors:
+  - family-names: Sheikder
+    given-names: Chandan
+    email: chandan@bit.edu.cn
+    affiliation: "Beijing Institute of Technology (BIT)"
+    orcid: "https://orcid.org/0000-0003-1459-8747"
+repository-code: "https://github.com/Chandan118/Neuromorphic-Navigation-Simulation"
+keywords:
+  - "neuromorphic"
+  - "navigation"
+  - "bio-inspired algorithms"
+  - "deep reinforcement learning"
+  - "simulation"
+contact:
+  - name: Chandan Sheikder
+    email: chandan@bit.edu.cn
+    website: "https://chandan118.github.io"
