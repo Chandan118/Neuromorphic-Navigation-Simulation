@@ -212,3 +212,5 @@ The CPG-based navigator maintains coupled oscillators representing left/right vi
 - `base_frequency` – intrinsic oscillator rate.
 - `coupling_strength` – synchronisation between oscillators.
 - `sensory_gain` / `obstacle_frequency_boost` – how strongly terrain cues reshape the gait.
+
+<!-- Python 3.10+ required -->
