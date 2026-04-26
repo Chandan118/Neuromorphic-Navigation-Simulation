@@ -1,17 +1,12 @@
 # File        : python-publish.yml
 # Author      : Chandan Sheikder
 # Email       : chandan@bit.edu.cn
-# Phone       : +8618222390506
 # Affiliation : Beijing Institute of Technology (BIT)
-# Date        : 2026-03-23
 #
-# This workflow will upload a Python Package to PyPI when a release is created
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-package-registries
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+# NOTE: To enable PyPI publishing:
+# 1. Go to https://pypi.org/manage/project/ and add a trusted publisher
+# 2. In GitHub repo Settings > Environments, create environment named "pypi"
+# 3. Set the environment URL to https://pypi.org/p/YOUR_PACKAGE_NAME
 
 name: Upload Python Package
 
@@ -35,7 +30,6 @@ jobs:
 
       - name: Build release distributions
         run: |
-          # NOTE: put your own distribution build steps here.
           python -m pip install build
           python -m build
 
@@ -50,19 +44,12 @@ jobs:
     needs:
       - release-build
     permissions:
-      # IMPORTANT: this permission is mandatory for trusted publishing
-      id-token: write
+      id-token: write  # Required for OIDC trusted publishing
 
-    # Dedicated environments with protections for publishing are strongly recommended.
-    # For more information, see: https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#deployment-protection-rules
     environment:
       name: pypi
-      # OPTIONAL: uncomment and update to include your PyPI project URL in the deployment status:
+      # Update with your actual PyPI project URL:
       # url: https://pypi.org/p/YOURPROJECT
-      #
-      # ALTERNATIVE: if your GitHub Release name is the PyPI project version string
-      # ALTERNATIVE: exactly, uncomment the following line instead:
-      # url: https://pypi.org/project/YOURPROJECT/${{ github.event.release.name }}
 
     steps:
       - name: Retrieve release distributions
